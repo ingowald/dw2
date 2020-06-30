@@ -1,0 +1,4 @@
+get_filename_component(dw2_client_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+include("${CMAKE_CURRENT_LIST_DIR}/dw2_clientTargets.cmake")
+
