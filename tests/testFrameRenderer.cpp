@@ -18,6 +18,7 @@
 #include "dw2_client.h"
 #include "../common/vec.h"
 #include "../common/mpi_util.h"
+#include <unistd.h>
 
 #include <chrono>
 

@@ -1,7 +1,7 @@
 
-option(BUILD_TEST_OSPRAY "Test renderer ehich uses OSPRay" OFF)
+# option(BUILD_TEST_OSPRAY "Test renderer which uses OSPRay" OFF)
 
-INCLUDE_DIRECTORIES(${OSPRAY_INCLUDE_DIRS})
+# INCLUDE_DIRECTORIES(${OSPRAY_INCLUDE_DIRS})
 
 include_directories(${CMAKE_SOURCE_DIR}/client/)
 # ------------------------------------------------------------------
@@ -13,7 +13,7 @@ add_executable(dw2_info
 target_link_libraries(dw2_info dw2_client)
 
 add_executable(dw2_noMPITestFrameRenderer
-	noMPITestFrameRenderer.cpp
+  noMPITestFrameRenderer.cpp
   )
 target_link_libraries(dw2_noMPITestFrameRenderer
   dw2_client
@@ -21,68 +21,68 @@ target_link_libraries(dw2_noMPITestFrameRenderer
   )
 
 if (MPI_FOUND) 
-# ------------------------------------------------------------------
-# test frame renderer
-# ------------------------------------------------------------------
-	add_executable(dw2_testFrameRenderer
-	  testFrameRenderer.cpp
-	  )
-	target_include_directories(dw2_testFrameRenderer PRIVATE
-	  ${MPI_CXX_INCLUDE_PATH}
-	  )
-	target_compile_options(dw2_testFrameRenderer PRIVATE
-	  ${MPI_CXX_COMPILE_FLAGS}
-	  )
-	target_link_libraries(dw2_testFrameRenderer
-	  dw2_client
-	  ${MPI_CXX_LIBRARIES}
-	  ${MPI_CXX_LINK_FLAGS}
-	  ${TBB_LIBRARIES}
-	  )
+  # ------------------------------------------------------------------
+  # test frame renderer
+  # ------------------------------------------------------------------
+  add_executable(dw2_testFrameRenderer
+    testFrameRenderer.cpp
+    )
+  target_include_directories(dw2_testFrameRenderer PRIVATE
+    ${MPI_CXX_INCLUDE_PATH}
+    )
+  target_compile_options(dw2_testFrameRenderer PRIVATE
+    ${MPI_CXX_COMPILE_FLAGS}
+    )
+  target_link_libraries(dw2_testFrameRenderer
+    dw2_client
+    ${MPI_CXX_LIBRARIES}
+    ${MPI_CXX_LINK_FLAGS}
+    ${TBB_LIBRARIES}
+    )
 
-	if(BUILD_TEST_OSPRAY)
+  # if(BUILD_TEST_OSPRAY)
 
-	  find_package(ospray 1.8.5 REQUIRED)
+  #   find_package(ospray 1.8.5 REQUIRED)
 
-	  add_executable(dw2_testOSPRay testOSPRay.cpp)
+  #   add_executable(dw2_testOSPRay testOSPRay.cpp)
 
-	  target_link_libraries(dw2_testOSPRay
-		MPI::MPI_CXX
-		dw2_client
-		#ospray::ospray
-		${OSPRAY_LIBRARIES}
-		${OSPRAY_COMMON_LIBRARY}
-		${OSPRAY_MPI_LIBRARIES}
-		${TBB_LIBRARIES}
-		)
-	endif()
+  #   target_link_libraries(dw2_testOSPRay
+  #     MPI::MPI_CXX
+  #     dw2_client
+  #     #ospray::ospray
+  #     ${OSPRAY_LIBRARIES}
+  #     ${OSPRAY_COMMON_LIBRARY}
+  #     ${OSPRAY_MPI_LIBRARIES}
+  #     ${TBB_LIBRARIES}
+  #     )
+  # endif()
 
- add_executable(dw2_testImages testImages.cpp)
- target_link_libraries(dw2_testImages
-   MPI::MPI_CXX
-   dw2_client
-   ${TBB_LIBRARIES}
- )
+  add_executable(dw2_testImages testImages.cpp)
+  target_link_libraries(dw2_testImages
+    MPI::MPI_CXX
+    dw2_client
+    ${TBB_LIBRARIES}
+    )
 
-	option(BUILD_TEST_LANDINGGEAR "Render Landing Gear Data?" OFF)
+#  option(BUILD_TEST_LANDINGGEAR "Render Landing Gear Data?" OFF)
 
-	if(BUILD_TEST_LANDINGGEAR)
-	  add_subdirectory(common)
-	  include_directories(common/)
-	  add_executable(dw2_testOSPRay_impi testOSPRay_impi.cpp)
+  # if(BUILD_TEST_LANDINGGEAR)
+  #   add_subdirectory(common)
+  #   include_directories(common/)
+  #   add_executable(dw2_testOSPRay_impi testOSPRay_impi.cpp)
 
-	  target_link_libraries(dw2_testOSPRay_impi
-		MPI::MPI_CXX
-		common_libs
-		dw2_client
-		#ospray::ospray
-		${OSPRAY_LIBRARIES}
-		${OSPRAY_COMMON_LIBRARY}
-		${OSPRAY_MPI_LIBRARIES}
-		${TBB_LIBRARIES}
-		)
-	endif()
+  #   target_link_libraries(dw2_testOSPRay_impi
+  #     MPI::MPI_CXX
+  #     common_libs
+  #     dw2_client
+  #     #ospray::ospray
+  #     ${OSPRAY_LIBRARIES}
+  #     ${OSPRAY_COMMON_LIBRARY}
+  #     ${OSPRAY_MPI_LIBRARIES}
+  #     ${TBB_LIBRARIES}
+  #     )
+  # endif()
 else()
-	message(WARNING "MPI not found, only building info and no MPI tests")
+  message(WARNING "MPI not found, only building info and no MPI tests")
 endif()
 

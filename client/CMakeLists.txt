@@ -48,66 +48,66 @@ target_link_libraries(dw2_client PUBLIC
 #  TBB::tbb
 # )
 
-include(GNUInstallDirs)
+# include(GNUInstallDirs)
 
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/dw2_client)
+# set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/dw2_client)
 
-target_include_directories(dw2_client PUBLIC
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-)
+# target_include_directories(dw2_client PUBLIC
+# 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+# )
 
-install(TARGETS dw2_client
-    EXPORT dw2_clientTargets 
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
+# install(TARGETS dw2_client
+#     EXPORT dw2_clientTargets 
+#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+# )
 
-set_target_properties(dw2_client PROPERTIES EXPORT_NAME dw2_client)
+# set_target_properties(dw2_client PROPERTIES EXPORT_NAME dw2_client)
 
-install(EXPORT dw2_clientTargets
-  FILE
-    dw2_clientTargets.cmake
-  NAMESPACE
-    dw2_client::
-  DESTINATION
-    ${INSTALL_CONFIGDIR}
-)
+# install(EXPORT dw2_clientTargets
+#   FILE
+#     dw2_clientTargets.cmake
+#   NAMESPACE
+#     dw2_client::
+#   DESTINATION
+#     ${INSTALL_CONFIGDIR}
+# )
 
-install(
-  FILES
-    dw2_client.h
-  DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}
-)
+# install(
+#   FILES
+#     dw2_client.h
+#   DESTINATION
+#     ${CMAKE_INSTALL_INCLUDEDIR}
+# )
 
-#Create a ConfigVersion.cmake file
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfigVersion.cmake
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
+# #Create a ConfigVersion.cmake file
+# include(CMakePackageConfigHelpers)
+# write_basic_package_version_file(
+#     ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfigVersion.cmake
+#     VERSION ${PROJECT_VERSION}
+#     COMPATIBILITY AnyNewerVersion
+# )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/dw2_clientConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfig.cmake
-    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-)
+# configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/dw2_clientConfig.cmake.in
+#     ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfig.cmake
+#     INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+# )
 
-#Install the config, configversion and custom find modules
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfigVersion.cmake
-    DESTINATION ${INSTALL_CONFIGDIR}
-)
+# #Install the config, configversion and custom find modules
+# install(FILES
+#     ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfig.cmake
+#     ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientConfigVersion.cmake
+#     DESTINATION ${INSTALL_CONFIGDIR}
+# )
 
-##############################################
-## Exporting from the build tree
+# ##############################################
+# ## Exporting from the build tree
 
-export(EXPORT dw2_clientTargets FILE ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientTargets.cmake NAMESPACE dw2_client::)
+# export(EXPORT dw2_clientTargets FILE ${CMAKE_CURRENT_BINARY_DIR}/dw2_clientTargets.cmake NAMESPACE dw2_client::)
 
-#Register package in user's package registry
-# export(PACKAGE dw2_client)
+# #Register package in user's package registry
+# # export(PACKAGE dw2_client)
 
 
 

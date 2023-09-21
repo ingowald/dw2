@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "mpi_util.h"
+// #include "mpi_util.h"
 #include "Socket.h"
 #include "Mailbox.h"
 // std

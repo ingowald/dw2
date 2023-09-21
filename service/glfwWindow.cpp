@@ -17,6 +17,7 @@
 #include "glfwWindow.h"
 #include <chrono>
 #include <sstream>
+#include <unistd.h>
 
 namespace dw2 {
 

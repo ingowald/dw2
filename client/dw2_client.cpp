@@ -192,11 +192,9 @@ namespace dw2 {
   extern "C" void dw2_disconnect()
   {
     std::cout << "DISCONNECT" << "\n";
-    std::cout << "DISCONNECT" << "\n";
-    std::cout << "DISCONNECT" << "\n";
-    std::cout << "DISCONNECT" << "\n";
-    std::cout << "DISCONNECT" << "\n";
-    _exit(0);
+    std::cout << std::flush;
+    fflush(0);
+    exit(0);
   }
 
   extern "C" void dw2_begin_frame()

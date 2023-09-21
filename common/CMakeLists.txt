@@ -71,26 +71,50 @@ if (MPI_FOUND)
 endif()
 
 add_library(dw2_common STATIC ${DW2_COMMON_SRC})
+if (TARGET TBB::tbb)
+  target_link_libraries(dw2_common PUBLIC TBB::tbb)
+else()
+  target_link_libraries(dw2_common PUBLIC ${TBB_LIBRARIES})
+  target_include_directories(dw2_common PUBLIC ${TBB_INCLUDE_DIR})
+endif()
+
 
 if (MPI_FOUND)
-  target_include_directories(dw2_common PUBLIC
-    ${MPI_CXX_INCLUDE_PATH}
-    )
-
-  target_compile_options(dw2_common PUBLIC
-    ${MPI_CXX_COMPILE_FLAGS}
-    )
-
-  target_link_libraries(dw2_common PUBLIC
-    ${MPI_CXX_LIBRARIES}
-    ${MPI_CXX_LINK_FLAGS})
+  if(NOT TARGET MPI::MPI_CXX)
+    add_library(MPI::MPI_CXX IMPORTED INTERFACE)
+    message("adding dummy mpi_cxx target")
+    
+    set_property(TARGET MPI::MPI_CXX
+      PROPERTY INTERFACE_COMPILE_OPTIONS ${MPI_CXX_COMPILE_FLAGS})
+    set_property(TARGET MPI::MPI_CXX
+      PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MPI_CXX_INCLUDE_PATH}")
+    set_property(TARGET MPI::MPI_CXX
+      PROPERTY INTERFACE_LINK_LIBRARIES ${MPI_CXX_LINK_FLAGS} ${MPI_CXX_LIBRARIES})
+  endif()
+  target_link_libraries(dw2_common PUBLIC MPI::MPI_CXX)
 endif()
 
-if (WIN32)
-  target_link_libraries(dw2_common PUBLIC
-    Ws2_32
-    )
-endif()
+
+
+# if (MPI_FOUND)
+#   target_include_directories(dw2_common PUBLIC
+#     ${MPI_CXX_INCLUDE_PATH}
+#     )
+
+#   target_compile_options(dw2_common PUBLIC
+#     ${MPI_CXX_COMPILE_FLAGS}
+#     )
+
+#   target_link_libraries(dw2_common PUBLIC
+#     ${MPI_CXX_LIBRARIES}
+#     ${MPI_CXX_LINK_FLAGS})
+# endif()
+
+# if (WIN32)
+#   target_link_libraries(dw2_common PUBLIC
+#     Ws2_32
+#     )
+# endif()
 
 
 #target_include_directories(dw2_common PUBLIC
@@ -105,14 +129,6 @@ endif()
 #  $<BUILD_INTERFACE:${GLFW_INCLUDE_DIR}>
 #  )
 
-target_compile_options(dw2_common PRIVATE
-  -fPIC
-  )
-
-target_link_libraries(dw2_common PUBLIC
-  ${TBB_LIBRARIES}
-  )
-
 if (USE_TURBO_JPEG)
   target_link_libraries(dw2_common PUBLIC
     ${TURBOJPEG_LIBRARY}
@@ -124,72 +140,72 @@ include(GNUInstallDirs)
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/dw2_common)
 
-install(TARGETS dw2_common
-  EXPORT dw2_commonTargets 
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  )
+# install(TARGETS dw2_common
+#   EXPORT dw2_commonTargets 
+#   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#   )
 
-set_target_properties(dw2_common PROPERTIES EXPORT_NAME dw2_common)
+# set_target_properties(dw2_common PROPERTIES EXPORT_NAME dw2_common)
 
-install(EXPORT dw2_commonTargets
-  FILE
-  dw2_commonTargets.cmake
-  NAMESPACE
-  dw2_common::
-  DESTINATION
-  ${INSTALL_CONFIGDIR}
-  )
+# install(EXPORT dw2_commonTargets
+#   FILE
+#   dw2_commonTargets.cmake
+#   NAMESPACE
+#   dw2_common::
+#   DESTINATION
+#   ${INSTALL_CONFIGDIR}
+#   )
 
-install(
-  FILES
-  common.h
-  CompressedTile.h
-  config_template.h
-  Mailbox.h
-  ServiceInfo.h
-  Socket.h
-  SocketGroup.h
-  vec.h
-  # cmake_generated_config_file.h
-  DESTINATION
-  ${CMAKE_INSTALL_INCLUDEDIR}
-  )
+# install(
+#   FILES
+#   common.h
+#   CompressedTile.h
+#   config_template.h
+#   Mailbox.h
+#   ServiceInfo.h
+#   Socket.h
+#   SocketGroup.h
+#   vec.h
+#   # cmake_generated_config_file.h
+#   DESTINATION
+#   ${CMAKE_INSTALL_INCLUDEDIR}
+#   )
 
-if (MPI_FOUND)
-  install(
-    FILES
-    mpi_util.h
-    DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}
-    )
-endif()
+# if (MPI_FOUND)
+#   install(
+#     FILES
+#     mpi_util.h
+#     DESTINATION
+#     ${CMAKE_INSTALL_INCLUDEDIR}
+#     )
+# endif()
 
-#Create a ConfigVersion.cmake file
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY AnyNewerVersion
-  )
+# #Create a ConfigVersion.cmake file
+# include(CMakePackageConfigHelpers)
+# write_basic_package_version_file(
+#   ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
+#   VERSION ${PROJECT_VERSION}
+#   COMPATIBILITY AnyNewerVersion
+#   )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/dw2_commonConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
-  INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-  )
+# configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/dw2_commonConfig.cmake.in
+#   ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
+#   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+#   )
 
-#Install the config, configversion and custom find modules
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
-  DESTINATION ${INSTALL_CONFIGDIR}
-  )
+# #Install the config, configversion and custom find modules
+# install(FILES
+#   ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
+#   ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
+#   DESTINATION ${INSTALL_CONFIGDIR}
+#   )
 
-##############################################
-## Exporting from the build tree
+# ##############################################
+# ## Exporting from the build tree
 
-export(EXPORT dw2_commonTargets FILE ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonTargets.cmake NAMESPACE dw2_common::)
+# export(EXPORT dw2_commonTargets FILE ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonTargets.cmake NAMESPACE dw2_common::)
 
 #Register package in user's package registry
 #export(PACKAGE dw2_common)

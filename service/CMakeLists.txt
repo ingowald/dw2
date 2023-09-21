@@ -14,10 +14,27 @@
 # limitations under the License.                                           #
 # ======================================================================== #
 
-find_package(OpenGL REQUIRED)
-find_package(GLFW REQUIRED)
+#find_package(OpenGL REQUIRED)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+#set(OpenGL_GL_PREFERENCE "LEGACY")
+#find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
+
+#find_package(glfw REQUIRED)
+
+find_package(glfw3 QUIET)
+set(OpenGL_GL_PREFERENCE "LEGACY")
+#find_package(OpenGL QUIET)
+find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
+if (NOT TARGET glfw)
+#  if (OpenGL_FOUND)
+#    message(STATUS "found opengl, building glfw")
+#    add_subdirectory(glfw)
+#  endif()
+message(ERROR "could not find glfw")
+endif()
+
+
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 
 # ------------------------------------------------------------------
@@ -36,32 +53,45 @@ add_library(dw2_core_service
   InfoServer.cpp
   )
 
-target_include_directories(dw2_core_service PRIVATE
-  ${MPI_CXX_INCLUDE_PATH}
-  )
+# if(NOT TARGET MPI::MPI_CXX)
+#   add_library(MPI::MPI_CXX IMPORTED INTERFACE)
+#   message("adding dummy mpi_cxx target")
 
-target_compile_options(dw2_core_service PRIVATE
-  ${MPI_CXX_COMPILE_FLAGS}
-  )
+#   set_property(TARGET MPI::MPI_CXX
+#     PROPERTY INTERFACE_COMPILE_OPTIONS ${MPI_CXX_COMPILE_FLAGS})
+#   set_property(TARGET MPI::MPI_CXX
+#     PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${MPI_CXX_INCLUDE_PATH}")
+#   set_property(TARGET MPI::MPI_CXX
+#     PROPERTY INTERFACE_LINK_LIBRARIES ${MPI_CXX_LINK_FLAGS} ${MPI_CXX_LIBRARIES})
+# endif()
+# target_link_libraries(dw2_core_service PRIVATE MPI::MPI_CXX)
+# target_include_directories(dw2_core_service PRIVATE
+#   ${MPI_CXX_INCLUDE_PATH}
+#   )
 
-target_compile_options(dw2_core_service PRIVATE
-  -fPIC
-  )
+# target_compile_options(dw2_core_service PRIVATE
+#   ${MPI_CXX_COMPILE_FLAGS}
+#   )
+
+# target_compile_options(dw2_core_service PRIVATE
+#   -fPIC
+#   )
 
 target_link_libraries(dw2_core_service PUBLIC
   dw2_common
   )
 
-target_link_libraries(dw2_core_service PRIVATE
-  ${MPI_CXX_LIBRARIES}
-  ${MPI_CXX_LINK_FLAGS}
-  )
+# target_link_libraries(dw2_core_service PRIVATE
+#   ${MPI_CXX_LIBRARIES}
+#   ${MPI_CXX_LINK_FLAGS}
+#   )
 
 
 # ------------------------------------------------------------------
 # the actual service that receives full frames and displays them in a
 # gl/glfw window
 # ------------------------------------------------------------------
+
 
 add_executable(dw2_service
 #  FrameAssembler.cpp
@@ -72,21 +102,27 @@ add_executable(dw2_service
 #  InfoServer.cpp
   )
 
-target_include_directories(dw2_service PRIVATE
-  ${MPI_CXX_INCLUDE_PATH}
-  )
+#target_include_directories(dw2_service PRIVATE
+#  ${MPI_CXX_INCLUDE_PATH}
+#  )
 
-target_compile_options(dw2_service PRIVATE
-  ${MPI_CXX_COMPILE_FLAGS}
-  )
+#target_compile_options(dw2_service PRIVATE
+#  ${MPI_CXX_COMPILE_FLAGS}
+#  )
 
-target_compile_options(dw2_service PRIVATE
-  -fPIC
-  )
+#target_compile_options(dw2_service PRIVATE
+#  -fPIC
+#  )
 
 target_link_libraries(dw2_service PRIVATE
   dw2_core_service
   glfw
-  ${OPENGL_LIBRARIES}
+#  ${OPENGL_LIBRARIES}
   )
+
+if(TARGET OpenGL::OpenGL)
+  target_link_libraries(dw2_service PUBLIC OpenGL::OpenGL)
+else()
+  target_link_libraries(dw2_service PUBLIC OpenGL::GL)
+endif()
 

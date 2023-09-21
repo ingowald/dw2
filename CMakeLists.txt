@@ -33,6 +33,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE "Release")
@@ -63,14 +64,14 @@ else()
 endif()
 
 
-if (DW_HAVE_TBB)
-  #target_compile_definitions(dw PUBLIC -DDW_HAVE_TBB=1)
-  if (TARGET TBB::tbb)
-    #    target_link_libraries(dw PUBLIC TBB::tbb)
-  else()
-    #    target_link_libraries(dw PUBLIC tbb)
-  endif()
-endif()
+# if (DW_HAVE_TBB)
+#   #target_compile_definitions(dw PUBLIC -DDW_HAVE_TBB=1)
+#   if (TARGET TBB::tbb)
+#     #    target_link_libraries(dw PUBLIC TBB::tbb)
+#   else()
+#     #    target_link_libraries(dw PUBLIC tbb)
+#   endif()
+# endif()
 
 #find_package(TBB REQUIRED)
 

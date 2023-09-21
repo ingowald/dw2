@@ -6,6 +6,7 @@
 #include "dw2_client.h"
 #include "../common/vec.h"
 #include "../common/mpi_util.h"
+#include <unistd.h>
 
 namespace dw2{
     extern int dbg_rank;
