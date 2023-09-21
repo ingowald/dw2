@@ -24,6 +24,7 @@
 #include <memory>
 #include <assert.h>
 #include <string>
+#include <string.h>
 #include <math.h>
 #include <cmath>
 #include <algorithm>
@@ -41,7 +42,6 @@
 // tbb
 #include <tbb/parallel_for.h>
 #include <tbb/task_arena.h>
-#include <tbb/task_scheduler_init.h>
 
 // #include "cmake_generated_config_file.h"
 

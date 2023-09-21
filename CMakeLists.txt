@@ -14,14 +14,15 @@
 # limitations under the License.                                           #
 # ======================================================================== #
 
-# aka "displaywald 2"
-project(DW2)
-
 cmake_minimum_required(VERSION 3.9)
 
-set(DW2_VERSION_MAJOR 0)
+set(DW2_VERSION_MAJOR 2)
 set(DW2_VERSION_MINOR 1)
 set(DW2_VERSION_PATCH 0)
+
+cmake_policy(SET CMP0048 NEW)
+# aka "displaywald 2"
+project(DW2 VERSION ${DW2_VERSION_MAJOR}.${DW2_VERSION_MINOR}.${DW2_VERSION_PATCH} LANGUAGES CXX)
 
 if(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
@@ -44,12 +45,36 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 configure_file(common/config_template.h ${CMAKE_BINARY_DIR}/cmake_generated_config_file.h)
 
 # -------------------------------------------------------
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 find_package(MPI)
-find_package(TBB REQUIRED)
 
-message(STATUS "${TBB_LIBRARIES}")
+find_package(TBB CONFIG)
+if (NOT TBB_FOUND)
+  find_package(TBB)
+endif()
+
+if (TBB_FOUND)
+  message(STATUS "#deewee: found TBB, with TBB_INCLUDE_DIR=${TBB_INCLUDE_DIR}")
+  set(DW_HAVE_TBB ON)
+else()
+  message(STATUS "#deewee: TBB not found...")
+  set(DW_HAVE_TBB OFF)
+endif()
+
+
+if (DW_HAVE_TBB)
+  #target_compile_definitions(dw PUBLIC -DDW_HAVE_TBB=1)
+  if (TARGET TBB::tbb)
+    #    target_link_libraries(dw PUBLIC TBB::tbb)
+  else()
+    #    target_link_libraries(dw PUBLIC tbb)
+  endif()
+endif()
+
+#find_package(TBB REQUIRED)
+
+#message(STATUS "${TBB_LIBRARIES}")
 
 # -------------------------------------------------------
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/)
@@ -57,10 +82,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/)
 include_directories(${CMAKE_BINARY_DIR})
 
 if (MPI_FOUND)
-	option(BUILD_SERVICE "build wall service option" OFF)
-	add_definitions(-DMPI_FOUND=1)
+  option(BUILD_SERVICE "build wall service option" OFF)
+  add_definitions(-DMPI_FOUND=1)
 else()
-	message(WARNING "MPI not found, MPI is required for the display wall service")
+  message(WARNING "MPI not found, MPI is required for the display wall service")
 endif()
 option(BUILD_CLIENT "build wall service option" OFF)
 option(BUILD_TESTS "build wall service option" OFF)

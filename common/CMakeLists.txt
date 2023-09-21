@@ -67,42 +67,43 @@ set(DW2_COMMON_SRC
   SocketGroup.cpp)
 
 if (MPI_FOUND)
-	list(APPEND DW2_COMMON_SRC mpi_util.cpp)
+  list(APPEND DW2_COMMON_SRC mpi_util.cpp)
 endif()
 
 add_library(dw2_common STATIC ${DW2_COMMON_SRC})
 
 if (MPI_FOUND)
-	target_include_directories(dw2_common PUBLIC
-	  ${MPI_CXX_INCLUDE_PATH}
-	  )
+  target_include_directories(dw2_common PUBLIC
+    ${MPI_CXX_INCLUDE_PATH}
+    )
 
   target_compile_options(dw2_common PUBLIC
-	  ${MPI_CXX_COMPILE_FLAGS}
-	  )
+    ${MPI_CXX_COMPILE_FLAGS}
+    )
 
   target_link_libraries(dw2_common PUBLIC
-	  ${MPI_CXX_LIBRARIES}
-	  ${MPI_CXX_LINK_FLAGS})
+    ${MPI_CXX_LIBRARIES}
+    ${MPI_CXX_LINK_FLAGS})
 endif()
 
 if (WIN32)
-	target_link_libraries(dw2_common PUBLIC
-		Ws2_32
-	)
+  target_link_libraries(dw2_common PUBLIC
+    Ws2_32
+    )
 endif()
 
-target_include_directories(dw2_common PUBLIC
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}>
-)
 
-target_include_directories(dw2_common PUBLIC
-	$<BUILD_INTERFACE:${TBB_INCLUDE_DIR}>
-)
+#target_include_directories(dw2_common PUBLIC
+#  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}>
+#  )
 
-target_include_directories(dw2_common PUBLIC
-	$<BUILD_INTERFACE:${GLFW_INCLUDE_DIR}>
-)
+#target_include_directories(dw2_common PUBLIC
+#  $<BUILD_INTERFACE:${TBB_INCLUDE_DIR}>
+#  )
+
+#target_include_directories(dw2_common PUBLIC
+#  $<BUILD_INTERFACE:${GLFW_INCLUDE_DIR}>
+#  )
 
 target_compile_options(dw2_common PRIVATE
   -fPIC
@@ -113,10 +114,10 @@ target_link_libraries(dw2_common PUBLIC
   )
 
 if (USE_TURBO_JPEG)
-target_link_libraries(dw2_common PUBLIC
-  ${TURBOJPEG_LIBRARY}
-  # ${JPEGTURBO_LIBRARY}
-  )
+  target_link_libraries(dw2_common PUBLIC
+    ${TURBOJPEG_LIBRARY}
+    # ${JPEGTURBO_LIBRARY}
+    )
 endif()
 
 include(GNUInstallDirs)
@@ -124,66 +125,66 @@ include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/dw2_common)
 
 install(TARGETS dw2_common
-    EXPORT dw2_commonTargets 
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
+  EXPORT dw2_commonTargets 
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
 
 set_target_properties(dw2_common PROPERTIES EXPORT_NAME dw2_common)
 
 install(EXPORT dw2_commonTargets
   FILE
-    dw2_commonTargets.cmake
+  dw2_commonTargets.cmake
   NAMESPACE
-    dw2_common::
+  dw2_common::
   DESTINATION
-    ${INSTALL_CONFIGDIR}
-)
+  ${INSTALL_CONFIGDIR}
+  )
 
 install(
   FILES
-    common.h
-    CompressedTile.h
-    config_template.h
-    Mailbox.h
-    ServiceInfo.h
-    Socket.h
-    SocketGroup.h
-    vec.h
-    # cmake_generated_config_file.h
+  common.h
+  CompressedTile.h
+  config_template.h
+  Mailbox.h
+  ServiceInfo.h
+  Socket.h
+  SocketGroup.h
+  vec.h
+  # cmake_generated_config_file.h
   DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}
-)
+  ${CMAKE_INSTALL_INCLUDEDIR}
+  )
 
 if (MPI_FOUND)
-	install(
-		FILES
-		mpi_util.h
-		DESTINATION
-		${CMAKE_INSTALL_INCLUDEDIR}
-	)
+  install(
+    FILES
+    mpi_util.h
+    DESTINATION
+    ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 endif()
 
 #Create a ConfigVersion.cmake file
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
+  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+  )
 
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/dw2_commonConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
-    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-)
+  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
+  INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+  )
 
 #Install the config, configversion and custom find modules
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
-    DESTINATION ${INSTALL_CONFIGDIR}
-)
+  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/dw2_commonConfigVersion.cmake
+  DESTINATION ${INSTALL_CONFIGDIR}
+  )
 
 ##############################################
 ## Exporting from the build tree

@@ -127,9 +127,14 @@ namespace dw2 {
       struct sockaddr_in sin;
       
       socklen_t len = sizeof(sin);
-      if (getsockname(socket->fd, (struct sockaddr *)&sin, &len) == -1)
+      if (getsockname(socket->fd, (struct sockaddr *)&sin, &len) == -1) {
         perror("getsockname");
-      else
+        // iw: perror() should already exit, but compiler doesn't
+        // recgnoize this and complains about missing return value
+        // ... so let's do a throw here even if that should never get
+        // triggered.
+        throw std::runtime_error("fatal error in getsockname()");
+      } else
         return ntohs(sin.sin_port);
     }
   
